@@ -1,0 +1,31 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "allwinner,sun50i-h616";
+
+    fragment@0 {
+        target = <&pio>;
+        __overlay__ {
+            btt_act_led: btt_act_led {
+                pins = "PH5";
+                function = "gpio_out";
+            };
+        };
+    };
+    fragment@1 {
+        target-path = "/leds/";
+        __overlay__ {
+            actleds {
+                compatible = "gpio-leds";
+                label = ":act";                 
+                pinctrl-names = "default";
+                pinctrl-0 = <&btt_act_led>;
+                gpios = <&pio 7 5 1>; /* CB1 v2.2:  PH5 in pio bank */
+                // gpios = <&pio 8 2 0>; /* CB1 eMMC PI2 in pio bank */
+                default-state = "on";
+                linux,default-trigger = "activity";
+            };
+        };
+    };
+};
